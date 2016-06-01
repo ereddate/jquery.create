@@ -1,7 +1,7 @@
 # jquery.create
 依附jQuery动态创建标签
 
-一、两种写法：
+一、写法：
 
 1）$(selector).create([参数对象，参数对象，...]);
 
