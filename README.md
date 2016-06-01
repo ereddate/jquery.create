@@ -1,13 +1,13 @@
 # jquery.create
 依附jQuery动态创建标签
 
-两种写法：
+一、两种写法：
 
 1）$(selector).create([参数对象，参数对象，...]);
 
 2）$.create(selector, [参数对象，参数对象，...]);
 
-参数：
+二、参数：
 
 tag: 标签类型, 必写;
 
