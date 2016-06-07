@@ -97,9 +97,14 @@ typeof jQuery != "undefined" && (function(win, $) {
 		} catch (e) {
 			console.log(e.message, self.attr("data-items"))
 		}
-		args ? ($.each(dataitems, function(i, item) {
+		!args && (args = []);
+		dataitems && $.each(dataitems, function(i, item) {
 			args.push(item)
-		})) : dataitems && (args = dataitems);
+		});
+		win["cItems"] && $.each(win["cItems"], function(i, item) {
+			args.push(item)
+		});
+		//console.log(args)
 		self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
 		if ($.isElement(fragment) && fragment.children().length > 0) {
 			function exec(num) {
