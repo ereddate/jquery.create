@@ -1,15 +1,15 @@
 typeof jQuery != "undefined" && (function(win, $) {
 	var api = {
-		match: "http://localhost:80/"
+		match: "http://api.match.vip.hexun.com/Rank.aspx?methodname=RankListFullIncomeRate"
 	};
-	win.testClick = function(){
+	win.testClick = function() {
 		console.log('testClick')
 	};
-	win.testInit = function(done){
+	win.testInit = function(done) {
 		console.log('testInit')
 		done();
 	};
-	win.gettestHtml = function(){
+	win.gettestHtml = function() {
 		return "test111"
 	};
 	$("body").create([{
@@ -77,6 +77,24 @@ typeof jQuery != "undefined" && (function(win, $) {
 				name: "desc",
 				html: "description"
 			}]
+		}, {
+			tag: "table",
+			name: "table",
+			handle: {
+				init: function(done) {
+					var list = [];
+					for (i = 0; i < 5; i++) list.push({
+						tag: "td",
+						name: "td" + i,
+						html: i + ""
+					});
+					$(this).create([{
+						tag: "tr",
+						name: "tr",
+						items: list
+					}]);
+				}
+			}
 		}, {
 			tag: "p",
 			name: "b",
