@@ -101,7 +101,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 		dataitems && $.each(dataitems, function(i, item) {
 			args.push(item)
 		});
-		win["cItems"] && $.each(win["cItems"], function(i, item) {
+		win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
 			args.push(item)
 		});
 		//console.log(args)
