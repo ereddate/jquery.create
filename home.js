@@ -12,6 +12,15 @@ typeof jQuery != "undefined" && (function(win, $) {
 	win.gettestHtml = function() {
 		return "test111"
 	};
+
+	win.cItems = {
+		body: [{
+			tag: "a",
+			name: "citems",
+			html: "citems"
+		}]
+	};
+
 	$("body").create([{
 		tag: "article",
 		//标签伪名，每个标签都需要有，注意不要重复
@@ -93,6 +102,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 						name: "tr",
 						items: list
 					}]);
+					done();
 				}
 			}
 		}, {
