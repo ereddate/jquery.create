@@ -16,6 +16,27 @@ typeof jQuery != "undefined" && (function(win, $) {
 		return index;
 	};
 
+	function tmpl(html, data, filter) {
+		//var html = this;
+
+		function find(html, data) {
+			if ($.isEmptyObject(data)) return html;
+
+			$.each(data, function(name, val) {
+				var reg = filter && filter(name) || new RegExp("{{\\s*(" + name + ")\\s*}}", "gi"),
+					result = reg.exec(html);
+				if (result) {
+					while (result != null && result[1]) {
+						html = html.replace(result[0], val);
+						result = reg.exec(html);
+					}
+				}
+			});
+			return html;
+		}
+		return find(html, data);
+	}
+
 	$.cFilterIndex = ["tag", "attr", "css", "html", "handle", "items"];
 	$.cFilter = {
 		tag: function(elem, item, prefix, target) {
@@ -42,7 +63,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 		},
 		html: function(elem, item, prefix, target) {
 			var value = item["html"];
-			elem && $.isElement(elem) && elem["html"]((value in win ? win[value]() : value));
+			if (elem && $.isElement(elem)) typeof value == "string" ? elem["html"]((value in win ? win[value]() : value)) : elem["html"](value(tmpl));
 			return elem;
 		},
 		handle: function(elem, item, prefix, target) {
@@ -96,8 +117,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 			dataitems = self.attr("data-items") != "" && (new Function("return " + self.attr("data-items"))()) || {};
 		} catch (e) {
 			console.log(e.message, self.attr("data-items"))
-		}
-		!args && (args = []);
+		}!args && (args = []);
 		dataitems && $.each(dataitems, function(i, item) {
 			args.push(item)
 		});
@@ -118,6 +138,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 			}
 			self.append(fragment.children().clone(true)), exec(0);
 		}
+		fragment.remove();
 		return this;
 	};
 	$.create = function( /*selector, options*/ ) {
