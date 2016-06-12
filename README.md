@@ -19,7 +19,7 @@ attr: 属性，{id:"a",...}，可选;
 
 css: 样式，{display:"block",...}，可选;
 
-html: 文本，可以是字符串也可以是方法名，可选;
+html: 文本或function，可以是字符串也可以是方法名，可选; 例html: function(tmpl){return tmpl(html, data, filter);} 
 
 handle: 事件，{click:function(){}, mouseover:方法名，init:function(done){初始化方法，最后执行done();}, ...}，可选;
 
