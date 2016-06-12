@@ -93,7 +93,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 				tag: "img",
 				name: "logo",
 				attr: {
-					src: "http://img10.3lian.com/d0214/file/2012/02/07/9396f24b9edca2425bd5a95198eeb328.jpg",
+					src: "url",
 					alt: "img test",
 					style: "width:100px;height:100px;"
 				}
