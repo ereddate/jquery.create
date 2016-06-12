@@ -1,6 +1,6 @@
 typeof jQuery != "undefined" && (function(win, $) {
 	var api = {
-		match: "http://api.match.vip.hexun.com/Rank.aspx?methodname=RankListFullIncomeRate"
+		match: "url"
 	};
 	win.testClick = function() {
 		console.log('testClick')
