@@ -84,7 +84,19 @@ typeof jQuery != "undefined" && (function(win, $) {
 			}, {
 				tag: "p",
 				name: "desc",
-				html: "description"
+				html: function(tmpl) {
+					return tmpl($("#tmpl").html(), {
+						a: "description"
+					});
+				}
+			}, {
+				tag: "img",
+				name: "logo",
+				attr: {
+					src: "http://img10.3lian.com/d0214/file/2012/02/07/9396f24b9edca2425bd5a95198eeb328.jpg",
+					alt: "img test",
+					style: "width:100px;height:100px;"
+				}
 			}]
 		}, {
 			tag: "table",
