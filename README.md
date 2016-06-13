@@ -25,4 +25,8 @@ handle: 事件，{click:function(){}, mouseover:方法名，init:function(done){
 
 items:子标签，[参数编写同父级]，可选;
 
-注：参数也可以写到目标标签的data-item属性中，如demo.html的写法。
+三、注意
+
+1）参数也可以写到目标标签的data-item属性中，如demo.html的写法。
+
+2）参数中可能会出现两个name，分别是伪名和dom属性name。
