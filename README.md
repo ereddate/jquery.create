@@ -30,3 +30,42 @@ items:子标签，[参数编写同父级]，可选;
 1）参数也可以写到目标标签的data-item属性中，如demo.html的写法。
 
 2）参数中可能会出现两个name，分别是伪名和dom属性name。
+
+四、例子
+
+```
+$("body").create([{
+  tag: "div",
+  name: "main",
+  attr:{
+    cls: "section"
+  },
+  css:{
+    display:"none"
+  },
+  html: "a",
+  items:[{
+    tag: "p",
+    name: "textlist",
+    items: ...
+  },{
+    tag: "input",
+    name: "username",
+    attr:{
+      name: "usname",
+      type: "hidden"
+    }
+  }],
+  handle:{
+    init: function(done){
+      $(this).create([...]);
+      done();
+    },
+    click: function(e){
+    }
+    ...
+  }
+},
+...
+]).hide();
+```
