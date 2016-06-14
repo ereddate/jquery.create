@@ -1,6 +1,6 @@
 typeof jQuery != "undefined" && (function(win, $) {
 	var api = {
-		match: "url"
+		match: "http://api.match.vip.hexun.com/Rank.aspx?methodname=RankListFullIncomeRate"
 	};
 	win.testClick = function() {
 		console.log('testClick')
@@ -55,7 +55,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 							handle: {
 								click: function(e) {
 									e.preventDefault();
-									alert("e");
+									console.log("e");
 								}
 							}
 						}]);
@@ -67,7 +67,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 			},
 			click: function(e) {
 				e.preventDefault();
-				alert("a");
+				console.log("a");
 			}
 		},
 		//子标签创建
@@ -93,7 +93,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 				tag: "img",
 				name: "logo",
 				attr: {
-					src: "url",
+					src: "http://img10.3lian.com/d0214/file/2012/02/07/9396f24b9edca2425bd5a95198eeb328.jpg",
 					alt: "img test",
 					style: "width:100px;height:100px;"
 				}
@@ -130,7 +130,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 			handle: {
 				click: function(e) {
 					e.preventDefault();
-					alert("b");
+					console.log("b");
 				}
 			},
 			items: [{
@@ -147,7 +147,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 				handle: {
 					click: function(e) {
 						e.preventDefault();
-						alert("c");
+						console.log("c");
 					}
 				}
 			}, {
@@ -164,10 +164,59 @@ typeof jQuery != "undefined" && (function(win, $) {
 				handle: {
 					click: function(e) {
 						e.preventDefault();
-						alert("d");
+						console.log("d");
 					}
 				}
 			}]
 		}]
+	}, {
+		tag: "article",
+		name: "tab",
+		attr: {
+			cls: "tab"
+		},
+		handle: {
+			init: function(done) {
+				var a = [],
+					b = [];
+				for (i = 0; i < 2; i++)(a.push({
+					tag: "a",
+					name: "button" + i,
+					html: "tab" + i,
+					attr: {
+						cls: "tab_button",
+						href: "javascript:;"
+					},
+					handle: {
+						click: function(e) {
+							$(this).parent().find(".tab_button").removeClass('on').parents(".tab").find(".tab_panel").hide();
+							var index = $(this).addClass('on').index();
+							$(this).parents(".tab").find(".tab_panel").eq(index).show();
+						}
+					}
+				}), b.push({
+					tag: "div",
+					name: "panel" + i,
+					html: "panel" + i,
+					attr: {
+						cls: "tab_panel"
+					},
+					css: {
+						display: "none"
+					}
+				}));
+				$(this).create([{
+					tag: "header",
+					name: "control",
+					items: a
+				}, {
+					tag: "div",
+					name: "panel",
+					items: b
+				}]);
+				$(".tab_button").eq(0).trigger('click');
+				done();
+			}
+		}
 	}]).find(".loading").hide();
 })(this, jQuery);
