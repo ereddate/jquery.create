@@ -105,11 +105,17 @@ $("body").create([{
 
 五、扩展
 
-可以对$.cFilterIndex属性索引【数组】、$.cFilter属性处理方法【对象】扩展，但注意的是$.cFilterIndex的索引顺序影响程序的处理顺序。
+扩展类型分为filter[参数属性]、customAttrs[自定义标签后缀]两种。
+```
+$.cExtend([{
+  index: 0,
+  name: "name",
+  fn: function(){
+  }
+}], "扩展类型");
+```
 
-$.cFilter的扩展可以使用$.extend方法。
-
-$.cFilterIndex的扩展主程序提供了如下方法：
+主程序对数组提供了如下方法：
 
 1）索引查找，[].find("name");
 
