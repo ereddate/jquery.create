@@ -1,5 +1,4 @@
 typeof jQuery != "undefined" && (function(win, $) {
-
 	$.isElement = function(obj) {
 		return obj && !!obj[0] && obj[0].nodeType == 1;
 	};
@@ -14,6 +13,11 @@ typeof jQuery != "undefined" && (function(win, $) {
 		}
 		callback && callback.call(this[index], index, this);
 		return index;
+	};
+	Array.prototype.mix = function(obj) {
+		var i, len = obj.length;
+		for (i = 0; i < len; i++) this.push(obj[i]);
+		return this;
 	};
 
 	function tmpl(html, data, filter) {
@@ -63,7 +67,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 		},
 		html: function(elem, item, prefix, target) {
 			var value = item["html"];
-			if (elem && $.isElement(elem)) typeof value == "string" ? elem["html"]((value in win ? win[value]() : value)) : elem["html"](value(tmpl));
+			if (elem && $.isElement(elem) && value) typeof value == "string" ? elem["html"]((value in win ? win[value]() : value)) : elem["html"](value(tmpl));
 			return elem;
 		},
 		handle: function(elem, item, prefix, target) {
@@ -95,7 +99,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 		return {
 			done: function(args, fragment, parentName, target) {
 				$.each(args, function(i, item) {
-					var elem, prefix = parentName + "_";
+					var elem, prefix = !parentName ? "" : parentName + "_";
 					$.each($.cFilterIndex, function(i, name) {
 						var value = item[name];
 						if (value) {
@@ -109,36 +113,39 @@ typeof jQuery != "undefined" && (function(win, $) {
 		};
 	}
 	$.fn.create = function(args) {
-		var self = this,
-			prefix = self.selector === "" ? self[0].selector || "" : self.selector.replace(".", ""),
-			fragment = $('<div class="' + prefix + '"></div>'),
-			dataitems;
-		try {
-			dataitems = self.attr("data-items") != "" && (new Function("return " + self.attr("data-items"))()) || {};
-		} catch (e) {
-			console.log(e.message, self.attr("data-items"))
-		}!args && (args = []);
-		dataitems && $.each(dataitems, function(i, item) {
-			args.push(item)
-		});
-		win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
-			args.push(item)
-		});
-		//console.log(args)
-		self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
-		if ($.isElement(fragment) && fragment.children().length > 0) {
-			function exec(num) {
-				var obj = self.emi[num];
-				obj && obj.fn(obj, function() {
-					num++;
-					if (num <= self.emi.length - 1) {
-						exec(num);
-					}
-				});
+		if (this.length > 0) {
+			var self = this,
+				prefix = self.selector === "" ? self[0].selector || (self[0].className.toLowerCase().split(' ') && self[0].className.toLowerCase().split(' ')[0] || self[0].className.toLowerCase()) || undefined : self.selector.replace(".", ""),
+				fragment = $('<div class="' + prefix + '"></div>'),
+				dataitems;
+			try {
+				dataitems = self.attr("data-items") != "" ? win[self.attr("data-items")] ? win[self.attr("data-items")]() : (new Function("return " + self.attr("data-items"))()) : {};
+			} catch (e) {
+				console.log(e.message, self.attr("data-items"))
+			}!args && (args = []);
+			dataitems && $.each(dataitems, function(i, item) {
+				args.push(item)
+			});
+			win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
+				args.push(item)
+			});
+			//console.log(args)
+			self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
+			if ($.isElement(fragment) && fragment.children().length > 0) {
+				function exec(num) {
+					var obj = self.emi[num];
+					obj && obj.fn(obj, function() {
+						num++;
+						if (num <= self.emi.length - 1) {
+							exec(num);
+						}
+					});
+				}
+				self.append(fragment.children().clone(true)), exec(0);
 			}
-			self.append(fragment.children().clone(true)), exec(0);
+			fragment.remove();
+			self.children("[data-items]").create();
 		}
-		fragment.remove();
 		return this;
 	};
 	$.create = function( /*selector, options*/ ) {
