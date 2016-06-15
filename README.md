@@ -19,15 +19,41 @@ attr: 属性，{id:"a",...}，可选;
 
 css: 样式，{display:"block",...}，可选;
 
-html: 文本或function，可以是字符串也可以是方法名，可选; 例html: function(tmpl){return tmpl(html, data, filter);} 
+html: 文本或function，可以是字符串也可以是方法名，可选; 
+```
+{
+  html: function(tmpl){
+    return tmpl(html, data, filter);
+  },
+  ...
+}
+```
 
-handle: 事件，{click:function(){}, mouseover:方法名，init:function(done){初始化方法，最后执行done();}, ...}，可选;
+handle: 事件，可选;
+```
+{
+  handle: {
+    click:function(){
+    }, 
+    mouseover:方法名，
+    init:function(done){初始化方法，最后执行done();}, 
+    ...
+  }
+  ...
+}
+```
 
 items:子标签，[参数编写同父级]，可选;
 
 三、注意
 
-1）参数也可以写到目标标签的data-item属性中，如demo.html的写法。
+1）参数也可以写到目标标签的data-item属性中，可以多层创建。
+```
+<div class="header" data-items="[{...},{...},...]">
+  <div class="headermain" data-items="[{...},...]"></div>
+  ...
+</div>
+```
 
 2）参数中可能会出现两个name，分别是伪名和dom属性name。
 
