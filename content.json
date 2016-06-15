@@ -1,0 +1,28 @@
+{
+	"data": [{
+		"tag": "div",
+		"name": "testdiv3",
+		"html": "gettestHtml",
+		"handle": {
+			"click": "testClick",
+			"init": "testInit"
+		},
+		"items": [{
+			"tag": "a",
+			"name": "test3",
+			"html": "gettestHtml",
+			"handle": {
+				"click": "testClick",
+				"init": "testInit"
+			}
+		}]
+	}, {
+		"tag": "article",
+		"name": "testarticle3",
+		"html": "gettestHtml",
+		"handle": {
+			"click": "testClick",
+			"init": "testInit"
+		}
+	}]
+}
