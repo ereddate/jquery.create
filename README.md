@@ -1,5 +1,5 @@
 # jquery.create
-依附jQuery动态创建标签，会自动读取父标签的data-item属性或window["cItems"]对象的值。
+依附jQuery动态创建标签，会自动读取父标签的data-items属性或window["cItems"]对象的值。
 
 一、写法：
 
@@ -47,7 +47,7 @@ items:子标签，[参数编写同父级]，可选;
 
 三、注意
 
-1）参数也可以写到目标标签的data-item属性中，可以多层创建。
+1）参数也可以写到目标标签的data-items属性中，可以多层创建。
 ```
 <div class="header" data-items="[{...},{...},...]">
   <div class="headermain" data-items="[{...},...]"></div>
