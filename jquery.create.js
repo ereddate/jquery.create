@@ -33,25 +33,24 @@ typeof jQuery != "undefined" && (function(win, $) {
 	};
 
 	function tmpl(html, data, filter) {
-		//var html = this;
+		if ($.isEmptyObject(data)) return html;
 
-		function find(html, data) {
-			if ($.isEmptyObject(data)) return html;
-
-			$.each(data, function(name, val) {
-				var reg = filter && filter(name) || new RegExp("{{\\s*(" + name + ")\\s*}}", "gi"),
+		$.each(data, function(name, val) {
+			var reg = filter && filter(name) || new RegExp("{{\\s*(" + name + ")\\s*}}", "gi"),
+				result = reg.exec(html);
+			if (result) {
+				while (result != null && result[1]) {
+					html = html.replace(result[0], val);
 					result = reg.exec(html);
-				if (result) {
-					while (result != null && result[1]) {
-						html = html.replace(result[0], val);
-						result = reg.exec(html);
-					}
 				}
-			});
-			return html;
-		}
-		return find(html, data);
+			}
+		});
+		return html;
 	}
+
+	String.prototype.tmpl = function(data, filter) {
+		return tmpl(this, data, filter);
+	};
 
 	$.cFilterIndex = ["tag", "attr", "css", "html", "handle", "items"];
 	$.cFilter = {
