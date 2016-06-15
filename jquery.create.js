@@ -82,7 +82,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 					elem: elem,
 					value: value,
 					fn: function(obj, done) {
-						obj.value["init"].call($("." + obj.elem[0].selector), done);
+						obj.value["init"] && (typeof obj.value["init"] == "string" ? win[obj.value["init"]] : obj.value["init"]).call($("." + obj.elem[0].selector), done);
 					}
 				});
 			}
@@ -112,39 +112,59 @@ typeof jQuery != "undefined" && (function(win, $) {
 			}
 		};
 	}
+
+	function getFile(file, callback) {
+		if (file)
+			$.getJSON(file, function(result) {
+				callback(result.data);
+			}).error(function() {
+				callback();
+			});
+		else
+			callback();
+	}
+
 	$.fn.create = function(args) {
 		if (this.length > 0) {
 			var self = this,
 				prefix = self.selector === "" ? self[0].selector || (self[0].className.toLowerCase().split(' ') && self[0].className.toLowerCase().split(' ')[0] || self[0].className.toLowerCase()) || undefined : self.selector.replace(".", ""),
 				fragment = $('<div class="' + prefix + '"></div>'),
-				dataitems;
-			try {
-				dataitems = self.attr("data-items") != "" ? win[self.attr("data-items")] ? win[self.attr("data-items")]() : (new Function("return " + self.attr("data-items"))()) : {};
-			} catch (e) {
-				console.log(e.message, self.attr("data-items"))
-			}!args && (args = []);
-			dataitems && $.each(dataitems, function(i, item) {
-				args.push(item)
-			});
-			win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
-				args.push(item)
-			});
-			//console.log(args)
-			self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
-			if ($.isElement(fragment) && fragment.children().length > 0) {
-				function exec(num) {
-					var obj = self.emi[num];
-					obj && obj.fn(obj, function() {
-						num++;
-						if (num <= self.emi.length - 1) {
-							exec(num);
-						}
+				dataitems,
+				subject = function() {
+					try {
+						dataitems = self.attr("data-items") != "" ? win[self.attr("data-items")] ? win[self.attr("data-items")]() : (new Function("return " + self.attr("data-items"))()) : {};
+					} catch (e) {
+						console.log(e.message, self.attr("data-items"))
+					}!args && (args = []);
+					dataitems && $.each(dataitems, function(i, item) {
+						args.push(item)
 					});
-				}
-				self.append(fragment.children().clone(true)), exec(0);
-			}
-			fragment.remove();
-			self.children("[data-items]").create();
+					win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
+						args.push(item)
+					});
+					//console.log(args)
+					self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
+					if ($.isElement(fragment) && fragment.children().length > 0) {
+						function exec(num) {
+							var obj = self.emi[num];
+							obj && obj.fn(obj, function() {
+								num++;
+								if (num <= self.emi.length - 1) {
+									exec(num);
+								}
+							});
+						}
+						self.append(fragment.children().clone(true)), exec(0);
+					}
+					fragment.remove();
+					self.children("[data-items]").create();
+				};
+			self.attr("data-file") ? getFile(self.attr("data-file"), function(data) {
+				data && $.each(data, function(i, item) {
+					args.push(item)
+				});
+				subject();
+			}) : subject();
 		}
 		return this;
 	};
