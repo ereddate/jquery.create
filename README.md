@@ -55,7 +55,14 @@ items:子标签，[参数编写同父级]，可选;
 </div>
 ```
 
-2）参数中可能会出现两个name，分别是伪名和dom属性name。
+2）参数也可以文件形式写到目标标签的data-file属性中，可以多层创建。
+```
+<div data-file="../path/filename.json">
+  ...
+</div>
+```
+
+3）参数中可能会出现两个name，分别是伪名和dom属性name。
 
 四、例子
 
