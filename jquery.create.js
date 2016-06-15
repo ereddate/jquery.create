@@ -87,7 +87,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 			if (elem && $.isElement(elem)) {
 				$.each(value, function(eventName, eventFn) {
 					eventName != "init" && elem.on(eventName, function(e) {
-						eventFn.call(this, e);
+						eventFn && (typeof eventFn == "string" ? win[eventFn] : eventFn).call(this, e);
 					});
 				});
 				"init" in value && target.emi.push({
@@ -146,7 +146,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 					try {
 						dataitems = self.attr("data-items") != "" ? win[self.attr("data-items")] ? win[self.attr("data-items")]() : (new Function("return " + self.attr("data-items"))()) : {};
 					} catch (e) {
-						console.log(e.message, self.attr("data-items"))
+						console.log(e.message, self[0], self.attr("data-items"))
 					}!args && (args = []);
 					dataitems && $.each(dataitems, function(i, item) {
 						args.push(item)
