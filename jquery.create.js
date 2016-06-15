@@ -14,9 +14,21 @@ typeof jQuery != "undefined" && (function(win, $) {
 		callback && callback.call(this[index], index, this);
 		return index;
 	};
-	Array.prototype.mix = function(obj) {
+	Array.prototype.add = function(obj) {
 		var i, len = obj.length;
 		for (i = 0; i < len; i++) this.push(obj[i]);
+		return this;
+	};
+	Array.prototype.insert = function(num, obj) {
+		this.splice(num, 0, obj);
+		return this;
+	};
+	Array.prototype.delete = function(num) {
+		this.splice(num, 1);
+		return this;
+	};
+	Array.prototype.clear = function() {
+		this.length = 0;
 		return this;
 	};
 
