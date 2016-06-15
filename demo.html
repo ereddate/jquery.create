@@ -3,15 +3,19 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" href="css/home.css">
 	</head>
-	<body data-items='[{tag:"div", name:"test", html: gettestHtml, handle:{click:testClick, init:testInit}, items:[{tag:"a", name:"test", html: gettestHtml, handle:{click:testClick, init:testInit}}]},{tag:"article", name:"test1", html: gettestHtml, handle:{click:testClick, init:testInit}}]'>
+	<body data-items='[{tag:"div", name:"testdiv", html: gettestHtml, handle:{click:testClick, init:testInit}, items:[{tag:"a", name:"test", html: gettestHtml, handle:{click:testClick, init:testInit}}]},{tag:"article", name:"testarticle", html: gettestHtml, handle:{click:testClick, init:testInit}}]'>
+		<div class="header" data-items='[{tag:"div", name:"testdiv1", html: gettestHtml, handle:{click:testClick, init:testInit}, items:[{tag:"a", name:"test", html: gettestHtml, handle:{click:testClick, init:testInit}}]},{tag:"article", name:"testarticle", html: gettestHtml, handle:{click:testClick, init:testInit}}]'>
+			<div class="headermain" data-items='[{tag:"div", name:"testdiv2", html: gettestHtml, handle:{click:testClick, init:testInit}, items:[{tag:"a", name:"test", html: gettestHtml, handle:{click:testClick, init:testInit}}]},{tag:"article", name:"testarticle", html: gettestHtml, handle:{click:testClick, init:testInit}}]'></div>
+		</div>
 		<span class="loading">loading...</span>
 		<script type="text/html" id="tmpl">
 		{{ a }}
 		</script>
-		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-		<script src="common.js"></script>
-		<script src="create.js"></script>
-		<script src="home.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/common.js"></script>
+		<script src="js/create.js"></script>
+		<script src="js/home.js"></script>
 	</body>
 </html>
