@@ -1,5 +1,5 @@
 # jQuery.create
-jQuery.create是依附jQuery动态创建标签，以DOM属性、参数、文件注入、自动适配设置等形式开放、灵活的动态创建您的项目。
+jQuery.create是依附jQuery动态创建标签，以DOM属性、参数、文件注入、自动适配等形式开放、灵活的动态创建您的项目。
 
 一、写法：
 
