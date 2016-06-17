@@ -93,6 +93,20 @@ typeof jQuery != "undefined" && (function(win, $) {
 			callback();
 		});
 	};
+	
+	$("head").create({
+		viewport: {
+			"width": "device-width",
+			"initial-scale": 1.0,
+			"user-scalable": 0,
+			"minimum-scale": 1.0,
+			"maximum-scale": 1.0
+		},
+		font: {
+			size: 16,
+			resize: true
+		}
+	});
 
 	$("body").create([{
 		tag: "article",
