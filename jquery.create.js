@@ -119,8 +119,8 @@ typeof jQuery != "undefined" && (function(win, $) {
 	$.c.filter = {};
 	$.c.customAttrsIndex = [];
 	$.c.customAttrs = {};
-	$.c.adaptiveIndex = [],
-		$.c.adaptive = {};
+	$.c.adaptiveIndex = [];
+	$.c.adaptive = {};
 
 	$.cExtend = function(arr, type) {
 		$.each(arr, function(i, obj) {
