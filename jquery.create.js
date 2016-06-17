@@ -1,4 +1,5 @@
 typeof jQuery != "undefined" && (function(win, $) {
+	var doc = win.document;
 	$.isElement = function(obj) {
 		return obj && !!obj[0] && obj[0].nodeType == 1;
 	};
@@ -52,6 +53,26 @@ typeof jQuery != "undefined" && (function(win, $) {
 		return tmpl(this, data, filter);
 	};
 
+	var storage = function() {
+		return !window.localStorage ? undefined : {
+			set: function(name, v) {
+				window.localStorage.setItem(name, v)
+				return this;
+			},
+			get: function(v) {
+				return window.localStorage.getItem(v);
+			},
+			delete: function(v) {
+				v = v.split(',');
+				$.each(v, function(i, name) {
+					window.localStorage.removeItem(name);
+				});
+				return this;
+			}
+		}
+	};
+	$.storage = storage();
+
 	function createElement() {
 		return {
 			done: function(args, fragment, parentName, target) {
@@ -98,6 +119,8 @@ typeof jQuery != "undefined" && (function(win, $) {
 	$.c.filter = {};
 	$.c.customAttrsIndex = [];
 	$.c.customAttrs = {};
+	$.c.adaptiveIndex = [],
+		$.c.adaptive = {};
 
 	$.cExtend = function(arr, type) {
 		$.each(arr, function(i, obj) {
@@ -178,60 +201,113 @@ typeof jQuery != "undefined" && (function(win, $) {
 	}], "filter").cExtend([{
 		index: 0,
 		name: "file",
-		fn: function(file, callback) {
+		fn: function(file, done) {
 			getFile(file, function(data) {
 				var args = [];
 				data && $.each(data, function(i, item) {
 					args.push(item)
 				});
-				callback(args);
+				done(args);
 			});
 		}
 	}, {
 		index: 1,
 		name: "items",
-		fn: function(items, callback) {
+		fn: function(items, done) {
 			try {
 				items = items != "" ? win[items] ? win[items]() : (new Function("return " + items)()) : {};
 			} catch (e) {
 				console.log(e.message, self[0], items);
 				items = [];
 			}
-			callback(items);
+			done(items);
 		}
-	}], "customAttrs");
+	}], "customAttrs").cExtend([{
+		index: 0,
+		name: "viewport",
+		fn: function(args, done) {
+			var content = [];
+			$.each(args, function(name, val) {
+				content.push(name + "=" + val);
+			});
+			var viewport = $(this).find("[name=viewport]");
+			if (viewport.length > 0) {
+				viewport.attr("content", content.join(','));
+				done();
+				return;
+			}
+			$(this).append($("meta").attr({
+				name: "viewport",
+				content: content.join(',')
+			}));
+			done();
+		}
+	}, {
+		index: 1,
+		name: "font",
+		fn: function(args, done) {
+			function setFontSize() {
+				var iWidth = doc.documentElement.clientWidth;
+				doc.getElementsByTagName('html')[0].style.fontSize = (iWidth / args.size).toFixed(2) + 'px';
+			}
+			args.size && setFontSize();
+			args.resize && win.addEventListener("onorientationchange" in win ? "orientationchange" : "resize", setFontSize, false);
+			done();
+		}
+	}], "adaptive");
+
+	var domID = 0;
 
 	$.fn.create = function(args) {
 		!args && (args = []);
 		if (this.length > 0) {
-			var self = this,
-				prefix = self.selector === "" ? self[0].selector || (self[0].className.toLowerCase().split(' ') && self[0].className.toLowerCase().split(' ')[0] || self[0].className.toLowerCase()) || undefined : self.selector.replace(".", ""),
-				fragment = $('<div class="' + prefix + '"></div>'),
-				customAttrsObject = [];
-			$.each($.c.customAttrsIndex, function(i, name) {
-				customAttrsObject.push({
-					name: name,
-					fn: function(obj, done) {
-						$.c.customAttrs[obj.name](self.attr("data-" + obj.name), function(arr) {
-							arr && (args = args.add(arr));
-							done();
-						});
-					}
-				})
-			});
-
-			callbacks(customAttrsObject, 0, function() {
-				win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
-					args.push(item)
+			if (this.length == 1 && this.selector != "" && this.selector.toLowerCase() == "head") {
+				var self = this,
+					adaptiveArray = [];
+				$.each($.c.adaptiveIndex, function(i, name) {
+					adaptiveArray.push({
+						name: name,
+						fn: function(obj, done) {
+							$.c.adaptive[obj.name].call(self, args[name], function(arr) {
+								done();
+							});
+						}
+					})
 				});
-				//console.log(args)
-				self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
-				if ($.isElement(fragment) && fragment.children().length > 0) {
-					self.append(fragment.children().clone(true)), callbacks(self.emi, 0);
-				}
-				fragment.remove();
-				self.children("[data-items]").create();
-			});
+				callbacks(adaptiveArray, 0, function() {});
+			} else {
+				$.each(this, function(i, elem) {
+					var self = $(this);
+					self[0].selector = self.selector === "" ? self[0].selector || !/body/.test(self[0].tagName.toLowerCase()) && self[0].tagName.toLowerCase() + (domID++) || self[0].tagName.toLowerCase() || undefined : self.selector.replace(".", "");
+					var prefix = self[0].selector,
+						fragment = $('<div class="' + prefix + '"></div>'),
+						customAttrsObject = [];
+					$.each($.c.customAttrsIndex, function(i, name) {
+						customAttrsObject.push({
+							name: name,
+							fn: function(obj, done) {
+								$.c.customAttrs[obj.name](self.attr("data-" + obj.name), function(arr) {
+									arr && (args = args.add(arr));
+									done();
+								});
+							}
+						})
+					});
+
+					callbacks(customAttrsObject, 0, function() {
+						win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
+							args.push(item)
+						});
+						//console.log(args)
+						self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
+						if ($.isElement(fragment) && fragment.children().length > 0) {
+							self.append(fragment.children().clone(true)), callbacks(self.emi, 0);
+						}
+						fragment.remove();
+						self.children("[data-items]").create();
+					});
+				});
+			}
 		}
 		return this;
 	};
