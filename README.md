@@ -80,47 +80,54 @@ items:子标签，[参数编写同父级]，可选;
 四、例子
 
 ```
-
-$("head").create({
-  font:{
-    size: 16, //html基础字体大小
-    resize: true //是否自动适配
-  }
+define("module", function(require, exports, module){
+  return {...}
 });
 
-$("body").create([{
-  "main:div":{
-    attr:{
-      cls: "section"
-    },
-    css:{
-      display:"none"
-    },
-    html: "a",
-    items:[{
-      "textlist:p":{
-        items: ...
-      }
-    },{
-      "username:input":{
-        attr:{
-          type: "hidden"
-        }
-      }
-    }],
-    handle:{
-      init: function(done){
-        $(this).create([...]);
-        done();
-      },
-      click: function(e){
-      }
-      ...
+define(function(require, exports, module){
+  var api = require("module");
+
+  $("head").create({
+    font:{
+      size: 16, //html基础字体大小
+      resize: true //是否自动适配
     }
-  }
-},
-...
-]).hide();
+  });
+  
+  $("body").create([{
+    "main:div":{
+      attr:{
+        cls: "section"
+      },
+      css:{
+        display:"none"
+      },
+      html: "a",
+      items:[{
+        "textlist:p":{
+          items: ...
+        }
+      },{
+        "username:input":{
+          attr:{
+            type: "hidden"
+          }
+        }
+      }],
+      handle:{
+        init: function(done){
+          $(this).create([...]);
+          done();
+        },
+        click: function(e){
+        }
+        ...
+      }
+    }
+  },
+  ...
+  ]).hide();
+});
 ```
 
 五、扩展
@@ -146,3 +153,34 @@ $.cExtend([{
 4）删除，[].delete(位置);
 
 5）清空，[].clear();
+
+六、define 用法如下：
+
+```
+define("d", function(require, exports, module) {
+	window.a = 1;
+});
+
+define("c", function(require, exports, module) {
+	exports.a = function() {
+		return 2;
+	};
+});
+
+define("b", ["d"], function(require, exports, module) {
+	return function() {
+		return window.a;
+	};
+});
+
+define("a", function(require, exports, module) {
+	var b = require("c");
+	var a = require("b");
+	exports.a = a() + b.a();
+});
+
+define(function(require, exports, module) {
+	var a = require("a").a;
+	console.log("define console: " + a)
+});
+```
