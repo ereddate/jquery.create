@@ -78,13 +78,18 @@ typeof jQuery != "undefined" && (function(win, $) {
 			done: function(args, fragment, parentName, target) {
 				$.each(args, function(i, item) {
 					var elem, prefix = !parentName ? "" : parentName + "_";
-					$.each($.c.filterIndex, function(i, name) {
-						var value = item[name];
-						if (value) {
-							elem = $.c.filter[name](elem, item, prefix, target);
-						}
+					$.each(item, function(itemName, itemValue) {
+						itemName = itemName.split(':');
+						itemValue.name = itemName[0];
+						itemValue.tag = itemName[1];
+						$.each($.c.filterIndex, function(i, name) {
+							var val = itemValue[name];
+							if (val) {
+								elem = $.c.filter[name](elem, itemValue, prefix, target);
+							}
+						});
+						elem && $.isElement(elem) && fragment.append(elem.addClass(prefix + (itemValue.name || itemValue.tag)));
 					});
-					elem && $.isElement(elem) && fragment.append(elem.addClass(prefix + (item.name || item.tag)));
 				});
 				return fragment;
 			}
@@ -224,26 +229,6 @@ typeof jQuery != "undefined" && (function(win, $) {
 		}
 	}], "customAttrs").cExtend([{
 		index: 0,
-		name: "viewport",
-		fn: function(args, done) {
-			var content = [];
-			$.each(args, function(name, val) {
-				content.push(name + "=" + val);
-			});
-			var viewport = $(this).find("[name=viewport]");
-			if (viewport.length > 0) {
-				viewport.attr("content", content.join(','));
-				done();
-				return;
-			}
-			$(this).append($("meta").attr({
-				name: "viewport",
-				content: content.join(',')
-			}));
-			done();
-		}
-	}, {
-		index: 1,
 		name: "font",
 		fn: function(args, done) {
 			function setFontSize() {
