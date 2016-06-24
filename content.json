@@ -1,28 +1,27 @@
 {
 	"data": [{
-		"tag": "div",
-		"name": "testdiv3",
-		"html": "gettestHtml",
-		"handle": {
-			"click": "testClick",
-			"init": "testInit"
+		"testdiv3:div": {
+			"html": "gettestHtml",
+			"handle": {
+				"click": "testClick",
+				"init": "testInit"
+			},
+			"items": [{
+				"test3:a": {
+					"html": "gettestHtml",
+					"handle": {
+						"click": "testClick",
+						"init": "testInit"
+					}
+				}
+			}]
 		},
-		"items": [{
-			"tag": "a",
-			"name": "test3",
+		"testarticle3:article": {
 			"html": "gettestHtml",
 			"handle": {
 				"click": "testClick",
 				"init": "testInit"
 			}
-		}]
-	}, {
-		"tag": "article",
-		"name": "testarticle3",
-		"html": "gettestHtml",
-		"handle": {
-			"click": "testClick",
-			"init": "testInit"
 		}
 	}]
 }
