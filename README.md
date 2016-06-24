@@ -13,8 +13,6 @@ jQuery.create是依附jQuery动态创建标签，以DOM属性、参数、文件�
 
 1) head下创建
 
-viewport: 视窗控制，可选;
-
 font: 字体大小，可选;
 
 2）body下创建
