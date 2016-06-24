@@ -19,9 +19,16 @@ font: 字体大小，可选;
 
 2）body下创建
 
-tag: 标签类型, 必写;
-
-name: 标签伪名, 必写;
+参数节点名：dom属性name + ":" + dom类型(tagName)组成，如：
+```
+{
+  "name:tagName":{
+    ...
+  },
+  ...
+}
+```
+其他节点属性如下：
 
 attr: 属性，{id:"a",...}，可选;
 
@@ -70,19 +77,13 @@ items:子标签，[参数编写同父级]，可选;
 </div>
 ```
 
-3）参数中可能会出现两个name，分别是伪名和dom属性name。
-
-4）head动态创建功能，必须按 $("head").create({}) 书写。
+3）head动态创建功能，必须按 $("head").create({}) 书写。
 
 四、例子
 
 ```
 
 $("head").create({
-  viewport:{ //head标签中有将更新，没有创建
-    width："device-width",
-    ...
-  },
   font:{
     size: 16, //html基础字体大小
     resize: true //是否自动适配
@@ -90,35 +91,34 @@ $("head").create({
 });
 
 $("body").create([{
-  tag: "div",
-  name: "main",
-  attr:{
-    cls: "section"
-  },
-  css:{
-    display:"none"
-  },
-  html: "a",
-  items:[{
-    tag: "p",
-    name: "textlist",
-    items: ...
-  },{
-    tag: "input",
-    name: "username",
+  "main:div":{
     attr:{
-      name: "usname",
-      type: "hidden"
-    }
-  }],
-  handle:{
-    init: function(done){
-      $(this).create([...]);
-      done();
+      cls: "section"
     },
-    click: function(e){
+    css:{
+      display:"none"
+    },
+    html: "a",
+    items:[{
+      "textlist:p":{
+        items: ...
+      }
+    },{
+      "username:input":{
+        attr:{
+          type: "hidden"
+        }
+      }
+    }],
+    handle:{
+      init: function(done){
+        $(this).create([...]);
+        done();
+      },
+      click: function(e){
+      }
+      ...
     }
-    ...
   }
 },
 ...
