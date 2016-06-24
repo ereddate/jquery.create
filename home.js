@@ -50,9 +50,8 @@ typeof jQuery != "undefined" && (function(win, $) {
 	});
 	//模块B
 	define("moduleB", function(require, exports, module) {
-		var api = require("api");
 		return function(elem, callback) {
-			$.require(api.match, false, {
+			$.require(require("api").match, false, {
 				callback: "callback"
 			})._jsonp(function(result) {
 				if (result.fh == 1) {
@@ -83,8 +82,6 @@ typeof jQuery != "undefined" && (function(win, $) {
 	});
 
 	define(function(require, exports, module) {
-		var moduleA = require("moduleA"),
-			moduleB = require("moduleB");
 		win.testClick = function() {
 			console.log('testClick')
 		};
@@ -125,7 +122,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 					//标签初始化事件
 					init: function(done) {
 						//模块B的使用
-						moduleB(this, done);
+						require("moduleB")(this, done);
 					},
 					click: function(e) {
 						e.preventDefault();
@@ -240,7 +237,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 				handle: {
 					init: function(done) {
 						//模块A的使用
-						moduleA(this, done);
+						require("moduleA")(this, done);
 					}
 				}
 			}
