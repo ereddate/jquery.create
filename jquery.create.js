@@ -79,7 +79,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 				$.each(args, function(i, item) {
 					var elem, prefix = !parentName ? "" : parentName + "_";
 					$.each(item, function(itemName, itemValue) {
-						itemName = itemName.split(':');
+						var itemName = itemName.split(':');
 						itemValue.name = itemName[0];
 						itemValue.tag = itemName[1];
 						$.each($.c.filterIndex, function(i, name) {
@@ -241,7 +241,39 @@ typeof jQuery != "undefined" && (function(win, $) {
 		}
 	}], "adaptive");
 
-	var domID = 0;
+	var domID = 0,
+		eachDoms = function(elems, args) {
+			var self = elems;
+			self.selector = self.selector && self.selector === "" ? self[0].selector || !/body/.test(self.tagName.toLowerCase()) && self.tagName.toLowerCase() + (domID++) || self.tagName.toLowerCase() || undefined : self.selector && self.selector.replace(".", "");
+			var prefix = self.selector,
+				fragment = $('<div class="' + prefix + '"></div>'),
+				customAttrsObject = [];
+			self = $(self);
+			$.each($.c.customAttrsIndex, function(i, name) {
+				customAttrsObject.push({
+					name: name,
+					fn: function(obj, done) {
+						$.c.customAttrs[obj.name](self.attr("data-" + obj.name), function(arr) {
+							arr && (args = args.add(arr));
+							done();
+						});
+					}
+				})
+			});
+
+			callbacks(customAttrsObject, 0, function() {
+				win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
+					args.push(item)
+				});
+				//console.log(args)
+				self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
+				if ($.isElement(fragment) && fragment.children().length > 0) {
+					self.append(fragment.children().clone(true)), callbacks(self.emi, 0);
+				}
+				fragment.remove();
+				self.children("[data-items]").create();
+			});
+		};
 
 	$.fn.create = function(args) {
 		!args && (args = []);
@@ -261,37 +293,13 @@ typeof jQuery != "undefined" && (function(win, $) {
 				});
 				callbacks(adaptiveArray, 0, function() {});
 			} else {
-				$.each(this, function(i, elem) {
-					var self = $(this);
-					self[0].selector = self.selector === "" ? self[0].selector || !/body/.test(self[0].tagName.toLowerCase()) && self[0].tagName.toLowerCase() + (domID++) || self[0].tagName.toLowerCase() || undefined : self.selector.replace(".", "");
-					var prefix = self[0].selector,
-						fragment = $('<div class="' + prefix + '"></div>'),
-						customAttrsObject = [];
-					$.each($.c.customAttrsIndex, function(i, name) {
-						customAttrsObject.push({
-							name: name,
-							fn: function(obj, done) {
-								$.c.customAttrs[obj.name](self.attr("data-" + obj.name), function(arr) {
-									arr && (args = args.add(arr));
-									done();
-								});
-							}
-						})
+				if (this.length === 1) {
+					eachDoms(this, args);
+				} else {
+					$.each(this, function(i, elem) {
+						eachDoms($(this), args);
 					});
-
-					callbacks(customAttrsObject, 0, function() {
-						win["cItems"] && win["cItems"][prefix] && $.each(win["cItems"][prefix], function(i, item) {
-							args.push(item)
-						});
-						//console.log(args)
-						self.emi = [], fragment = (new createElement()).done(args, fragment, prefix, self);
-						if ($.isElement(fragment) && fragment.children().length > 0) {
-							self.append(fragment.children().clone(true)), callbacks(self.emi, 0);
-						}
-						fragment.remove();
-						self.children("[data-items]").create();
-					});
-				});
+				}
 			}
 		}
 		return this;
