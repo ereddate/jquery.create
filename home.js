@@ -1,7 +1,7 @@
 typeof jQuery != "undefined" && (function(win, $) {
 	define("api", function(require, exports, module) {
 		return {
-			match: "http://api.match.vip.hexun.com/Rank.aspx?methodname=RankListFullIncomeRate"
+			match: "url"
 		}
 	});
 	//模块A
@@ -151,7 +151,7 @@ typeof jQuery != "undefined" && (function(win, $) {
 							},
 							"logo:img": {
 								attr: {
-									src: "http://img10.3lian.com/d0214/file/2012/02/07/9396f24b9edca2425bd5a95198eeb328.jpg",
+									src: "url",
 									alt: "img test",
 									style: "width:100%;height:100px;"
 								},
